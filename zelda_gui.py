@@ -135,7 +135,7 @@ def build_main_layout():
                     key='listbox',
                     no_scrollbar=True,
                     visible=True)],
-                [sg.Button("Salvar")]
+                [sg.SaveAs("Salvar",enable_events=True,target='Salvar')]
 
                 ],
                 justification='right',
@@ -241,9 +241,9 @@ def main():
             if ed and len(values['listbox']) > 0:
                 world_map = edit(graph,world_map,dicti,values['graph'],values['listbox'])
         elif event == 'Salvar':
-            print(values)
-            file.save(world_map,"editado.txt")
-
+            file.save(world_map,values['Salvar'])
+            graph.erase()
+            dicti = initial_map(world_map,graph)
         #DEBUG
         elif event == sg.SYMBOL_DOWN:
             y = y+1
