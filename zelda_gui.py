@@ -1,8 +1,9 @@
 import PySimpleGUI as sg
 
 import file_processing as file
+import A_stars
 import numpy
-
+import time
 sg.theme('DarkAmber')   # Add a touch of color
 
 GRASS = 10 
@@ -224,16 +225,17 @@ def main():
 
     window,graph,dicti,world_map = build_main_layout()
 
-    x=23
-    y =27
-
     while True:      
         event, values = window.read()
 
         if event == sg.WIN_CLOSED:      
             break
         elif event == 'Iniciar':
-            sg.popup_error('Ainda não foi implementado')
+            path = A_stars.main()
+            for x,y in path:
+                print(x,y)
+                move(graph,dicti,x,y)
+
         elif event == 'Editar':
             ed = not ed
             window['column'].Update(visible=ed)
@@ -244,6 +246,7 @@ def main():
             file.save(world_map,values['Salvar'])
             graph.erase()
             dicti = initial_map(world_map,graph)
+        
         #DEBUG
         elif event == sg.SYMBOL_DOWN:
             y = y+1
