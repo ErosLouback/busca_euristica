@@ -30,7 +30,8 @@ def RetiraEspaço():  #Retira os espaços e preenche a lista com a classe
 	return aux
 
 def calcula_distancia(estado_atual, estado_final):
-    return abs(estado_atual.x - estado_final.x) + abs((estado_atual.y - estado_final.y))
+	a = abs(estado_atual.x - estado_final.x) + abs((estado_atual.y - estado_final.y))
+	return D * a
 	#soma = pow((estado_final.x - estado_atual.x), 2) + pow((estado_final.y - estado_atual.y), 2)
 	#distancia = sqrt(soma)
 	#return distancia
@@ -176,8 +177,8 @@ def main():
 
 	matriz = RetiraEspaço()
 	#print(matriz[6][4].x)
-	estado_inicial = matriz[2][1]
-	estado_final = matriz[4][9]
+	estado_inicial = matriz[23][27]
+	estado_final = matriz[2][1]
 	print(estado_final.x)
 	print(estado_inicial.x)
 	sol = busca_a_estrela(matriz,estado_inicial,estado_final)
