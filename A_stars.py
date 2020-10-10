@@ -31,7 +31,7 @@ def RetiraEspaço():  #Retira os espaços e preenche a lista com a classe
 
 def calcula_distancia(estado_atual, estado_final):
 	a = abs(estado_atual.x - estado_final.x) + abs((estado_atual.y - estado_final.y))
-	return 95 * a
+	return (10*a)
 	#soma = pow((estado_final.x - estado_atual.x), 2) + pow((estado_final.y - estado_atual.y), 2)
 	#distancia = sqrt(soma)
 	#return distancia
@@ -146,7 +146,6 @@ def busca_a_estrela( matriz , estado_inicial, estado_final):
 		nos_expandidos.append(estadoPai) # E o adiciona como nó expandido
 
 		#GUI feedback
-		yield (estadoPai.x,estadoPai.y)
 
 		for i in range(0, len(estados_filhos)):
 			sucessor = estados_filhos[i]
@@ -157,7 +156,7 @@ def busca_a_estrela( matriz , estado_inicial, estado_final):
 					d_linha_reta[sucessor] = calcula_distancia(sucessor, estado_final)
 					teste = (peso_do_caminho(sucessor))
 					d_percorrida[sucessor] = d_percorrida[estadoPai] + (peso_do_caminho(sucessor))
-					heuristica[sucessor] = d_linha_reta[sucessor] + d_percorrida[sucessor]   #Calculo da Func heuristica
+					heuristica[sucessor] = d_linha_reta[sucessor] + d_percorrida[sucessor]  #Calculo da Func heuristica
 					predecessores[sucessor] = estadoPai 
 
 		repeticao = repeticao + 1
@@ -167,7 +166,6 @@ def busca_a_estrela( matriz , estado_inicial, estado_final):
 
 	if (solucao == True):
 		return retorna_solucao(estadoPai,predecessores,repeticao)
-		mostra_solucao(estadoPai,predecessores,repeticao)
 	else:
 		print("Não foi possivel achar uma solução")
 
@@ -179,8 +177,8 @@ def main():
 	#print(matriz[6][4].x)
 	estado_inicial = matriz[23][27]
 	estado_final = matriz[2][1]
-	print(estado_final.x)
-	print(estado_inicial.x)
+	#print(estado_final.x)
+	#print(estado_inicial.x)
 	sol = busca_a_estrela(matriz,estado_inicial,estado_final)
 	return sol
 	
