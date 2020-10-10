@@ -1,6 +1,8 @@
 from celulas import celula
 from math import sqrt
 from math import pow
+from resultado import resultado
+import random
 
 def RetiraEspaço():  #Retira os espaços e preenche a lista com a classe
 	mapa = open("hyrule.txt", 'r', encoding="utf8")
@@ -15,10 +17,9 @@ def RetiraEspaço():  #Retira os espaços e preenche a lista com a classe
 		for i in linha:
 			if i==" ":   # Retira espacos em branco do arquivo
 				continue
-			else :
+			if i != "\n":
 				celulas = celula(i,x,y)	 #preenche a celula, com o valor e as coordenadas
-				if i != "\n":
-					Retira_espaço.append(celulas)
+				Retira_espaço.append(celulas)
 				y = y + 1
 		x = x + 1		
 		aux.append(Retira_espaço)
@@ -91,15 +92,22 @@ def peso_do_caminho(estado):
 def mostra_solucao(estado,predecessores,repeticao):
 	custo_total = 0
 	caminho = []
+	result = resultado()
+
+	#print(repeticao)
 	caminho.append(estado)					# Faz o caminho de volta até o estado inicial
 	while(predecessores[estado]!=None) :
 		caminho.append(predecessores[estado])
 		estado = predecessores[estado]
 	caminho = caminho[::-1]  #Inverte a lista
 	for no in caminho:
-		print('x = ',no.x,'y =',no.y, 'valor:',no.valor)
+		#print('x = ',no.x,'y =',no.y, 'valor:',no.valor)
 		custo_total = custo_total + peso_do_caminho(no)
-	print(custo_total)
+	#print('Custo total : ',custo_total)
+	
+	result.caminho = caminho
+	result.custo = custo_total
+	return result
 
 def retorna_solucao(estado,predecessores,repeticao):
 	path =[]
@@ -145,8 +153,6 @@ def busca_a_estrela( matriz , estado_inicial, estado_final):
 		estados_filhos = procura_filhos(matriz,estadoPai)
 		nos_expandidos.append(estadoPai) # E o adiciona como nó expandido
 
-		#GUI feedback
-
 		for i in range(0, len(estados_filhos)):
 			sucessor = estados_filhos[i]
 			if(sucessor not in nos_expandidos and sucessor not in auxiliar) : #Verifica se o nó já foi expandido ou se já esta para ser avaliado
@@ -156,7 +162,7 @@ def busca_a_estrela( matriz , estado_inicial, estado_final):
 					d_linha_reta[sucessor] = calcula_distancia(sucessor, estado_final)
 					teste = (peso_do_caminho(sucessor))
 					d_percorrida[sucessor] = d_percorrida[estadoPai] + (peso_do_caminho(sucessor))
-					heuristica[sucessor] = d_linha_reta[sucessor] + d_percorrida[sucessor]  #Calculo da Func heuristica
+					heuristica[sucessor] = d_linha_reta[sucessor] + d_percorrida[sucessor]   #Calculo da Func heuristica
 					predecessores[sucessor] = estadoPai 
 
 		repeticao = repeticao + 1
@@ -165,22 +171,68 @@ def busca_a_estrela( matriz , estado_inicial, estado_final):
 	#Checar se encontrou uma solucao através da variável booleana
 
 	if (solucao == True):
-		return retorna_solucao(estadoPai,predecessores,repeticao)
+		resultado = mostra_solucao(estadoPai,predecessores,repeticao)
+		return resultado
 	else:
 		print("Não foi possivel achar uma solução")
 
+def calcula_caminhos(matriz, estado_inicial, estados_finais, soma_resultado):
+
+	for x in range(3):
+		random.shuffle(estados_finais)  # Embaralha a ordem dos estados
+		
+		final = estados_finais.pop()		# Vai desimpilhando aleatoriamente pra definir o caminho
+		resultado = busca_a_estrela(matriz ,estado_inicial, final )
+		estado_inicial = final 
+		soma_resultado.custo = resultado.custo + soma_resultado.custo
+		soma_resultado.caminho.append(resultado.caminho)
+
+	#print('\n aqui')
+	resultado = busca_a_estrela(matriz ,estado_inicial, matriz[2][3] )
+	soma_resultado.custo = resultado.custo + soma_resultado.custo
+	soma_resultado.caminho.append(resultado.caminho)
+	
+	return soma_resultado
 
 def main():
 
+	resultado_final =[]
 
+	soma_resultado = resultado()
 	matriz = RetiraEspaço()
 	#print(matriz[6][4].x)
-	estado_inicial = matriz[23][27]
-	estado_final = matriz[2][1]
-	#print(estado_final.x)
-	#print(estado_inicial.x)
-	sol = busca_a_estrela(matriz,estado_inicial,estado_final)
-	return sol
+	estado_inicial = matriz[24][28] # posição do link
+	estado_final = matriz[2][3]
+	estados_finais = []  
+	estados_finais.append(matriz[2][25])
+	estados_finais.append(matriz[40][18])
+	estados_finais.append(matriz[32][6])
+
+	lista_resultado = []
+
+	iteracoes = 5		#Determino o número de iterações afim de encontrar uma melhor solução
+
+	for i in range(iteracoes):   		# Executa as iterações salvando o caminho e o custo total
+		resposta = calcula_caminhos(matriz, estado_inicial, estados_finais, soma_resultado)
+		estados_finais.append(matriz[2][25])
+		estados_finais.append(matriz[40][18])
+		estados_finais.append(matriz[32][6])
+		lista_resultado.append(resposta)
+
+	#print(lista_resultado[0].custo)
+	resultado_final
+
+	menor_caminho = lista_resultado[0]
+
+	for i in range(1,iteracoes):		# Seleciona o melhor resultado entre as iterações
+		if(lista_resultado[i].custo < menor_caminho.custo):
+			menor_caminho = lista_resultado[i]
+
+	print('\n\nO menor custo',menor_caminho.custo)
+
+	return menor_caminho.caminho
+	 
+	#resultado = busca_a_estrela(matriz,estado_inicial,estado_final)
 	
 
 if __name__ == "__main__":

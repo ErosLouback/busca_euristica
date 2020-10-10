@@ -232,10 +232,12 @@ def main():
             break
         elif event == 'Iniciar':
             path = A_stars.main()
-            #print(path)
-            for x,y,w in path:
-                #print(x,y)
-                move(graph,dicti,x,y)
+            #print(path.caminho)
+            for i in path:
+                for k in i:
+                    print(k)
+                    move(graph,dicti,x,y)
+
 
         elif event == 'Editar':
             ed = not ed
