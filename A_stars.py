@@ -31,7 +31,7 @@ def RetiraEspaço():  #Retira os espaços e preenche a lista com a classe
 
 def calcula_distancia(estado_atual, estado_final):
 	a = abs(estado_atual.x - estado_final.x) + abs((estado_atual.y - estado_final.y))
-	return D * a
+	return 95 * a
 	#soma = pow((estado_final.x - estado_atual.x), 2) + pow((estado_final.y - estado_atual.y), 2)
 	#distancia = sqrt(soma)
 	#return distancia
