@@ -236,7 +236,7 @@ def main():
             for i in path:
                 for k in i:
                     print(k)
-                    move(graph,dicti,x,y)
+                    move(graph,dicti,k.x,k.y)
 
 
         elif event == 'Editar':
@@ -252,17 +252,17 @@ def main():
         
         #DEBUG
         elif event == sg.SYMBOL_DOWN:
-            y = y+1
-            move(graph,dicti,x,y)
+            k.y = k.y+1
+            move(graph,dicti,k.x,k.y)
         elif event == sg.SYMBOL_LEFT:
-            x = x-1
-            move(graph,dicti,x,y)
+            k.x = k.x-1
+            move(graph,dicti,k.x,k.y)
         elif event == sg.SYMBOL_RIGHT:
-            x = x+1
-            move(graph,dicti,x,y)
+            k.x = k.x+1
+            move(graph,dicti,k.x,k.y)
         elif event == sg.SYMBOL_UP:
-            y = y-1
-            move(graph,dicti,x,y)
+            k.y = k.y-1
+            move(graph,dicti,k.x,k.y)
     
     
     window.close()
